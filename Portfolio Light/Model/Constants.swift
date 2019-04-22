@@ -11,7 +11,7 @@ import Foundation
 struct Constants {
     
     struct AlphaVantageAPI {
-        static let key = "INSERT KEY HERE"
+        static let key = "---INSERT KEY HERE---"
         static let BaseUrl = "https://www.alphavantage.co/query?"
     }
 }
