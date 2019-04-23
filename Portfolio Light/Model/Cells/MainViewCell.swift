@@ -10,6 +10,8 @@ import UIKit
 
 class MainViewCell: UITableViewCell {
 
+   
+    @IBOutlet weak var barView: UIView!
     @IBOutlet weak var priceNow: UILabel!
     @IBOutlet weak var boughtPrice: UILabel!
     @IBOutlet weak var amountOfStocks: UILabel!
@@ -18,12 +20,19 @@ class MainViewCell: UITableViewCell {
     @IBOutlet weak var rawValueLabel: UILabel!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var stocknameLabel: UILabel!
-    @IBOutlet weak var percentageLbel: UILabel!
+    @IBOutlet weak var percentageLabel: UILabel!
     override func awakeFromNib() {
         
         super.awakeFromNib()
         bgView.backgroundColor = .myDark
         bgView.layer.cornerRadius = 15
+        
+        barView.backgroundColor = .myPurple
+        stocknameLabel.textColor = .myPurple
+        dateBought.textColor = .myLightPurple
+        amountOfStocks.textColor = .myLightPurple
+        boughtPrice.textColor = .myLightPurple
+        priceNow.textColor = .myLightPurple
         
         bgView.layer.shadowColor = CGColor.myLightPurple
         bgView.layer.shadowOpacity = 1

@@ -11,7 +11,14 @@ import UIKit
 class ThirdViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     
+    @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var bgView: UIView!
+    @IBAction func doneButtonAction(_ sender: Any) {
+        let mainSB = UIStoryboard(name: "Main", bundle: nil)
+        let vc = mainSB.instantiateViewController(withIdentifier: "addStockVC")
+        vc.modalTransitionStyle = .crossDissolve
+        self.present(vc, animated: true, completion: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +35,11 @@ class ThirdViewController: UIViewController {
         descriptionLabel.font = UIFont.preferredFont(forTextStyle: .title3)
         descriptionLabel.adjustsFontForContentSizeCategory = true
         
+        doneButton.backgroundColor = .myDark
+        doneButton.layer.cornerRadius = 15
+        doneButton.layer.borderWidth = 2
+        doneButton.layer.borderColor = .myPurple
+        doneButton.setTitleColor(.myPurple, for: .normal)
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent

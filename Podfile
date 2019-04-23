@@ -7,4 +7,5 @@ target 'Portfolio Light' do
   
   # Pods for Portfolio Light
   pod 'Charts'
+  pod 'SwiftReorder', '~> 6.0'
 end

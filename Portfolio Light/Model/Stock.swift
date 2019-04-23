@@ -32,7 +32,11 @@ class Stock: NSObject, Codable {
         self.buyingPrice = buyingPrice
     }
     
-    func calculateLossOrProfit() -> Int{
-        return 0
+    func calculateLossOrProfit(priceNow: Double) -> (Int, Int) {
+        
+        let percentage = Int(((priceNow - buyingPrice)/buyingPrice) * 100)
+        let rawValue = Int(priceNow*Double(amount) - buyingPrice*Double(amount))
+        
+        return (percentage, rawValue)
     }
 }

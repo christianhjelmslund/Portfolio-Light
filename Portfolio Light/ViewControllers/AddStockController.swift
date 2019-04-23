@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, animateCompletionDelegate {
+class AddStockController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, animateCompletionDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -19,7 +19,6 @@ class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDe
     private let api = AlphaVantageAPI()
     private var keywords: [StockSearchResult] = []
     
-
     @IBAction func doneAction(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let mainVC = sb.instantiateViewController(withIdentifier: "MainVC") as! MainViewController
@@ -96,7 +95,6 @@ class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDe
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       
         if !searchText.isEmpty {
             api.getSearchValues(keyword: searchText) { result, status in
                 

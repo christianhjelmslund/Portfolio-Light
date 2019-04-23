@@ -45,7 +45,7 @@
 		A1C31E7B226F353E00D48474 /* MainViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C31E7A226F353E00D48474 /* MainViewCell.swift */; };
 		A1F928852264A19A00F38774 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F928842264A19A00F38774 /* SecondViewController.swift */; };
 		A1F928872264A4A200F38774 /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F928862264A4A200F38774 /* ThirdViewController.swift */; };
-		A1F928892264A4AB00F38774 /* FourthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F928882264A4AB00F38774 /* FourthViewController.swift */; };
+		A1F928892264A4AB00F38774 /* AddStockController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F928882264A4AB00F38774 /* AddStockController.swift */; };
 		A1F9288B2264A85F00F38774 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F9288A2264A85F00F38774 /* Constants.swift */; };
 		A1F9288E2264A9C400F38774 /* AlphaVantageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F9288D2264A9C400F38774 /* AlphaVantageAPI.swift */; };
 		A1F928902264D0F900F38774 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F9288F2264D0F900F38774 /* SearchResultCell.swift */; };
@@ -97,7 +97,7 @@
 		A1C31E7A226F353E00D48474 /* MainViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewCell.swift; sourceTree = "<group>"; };
 		A1F928842264A19A00F38774 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A1F928862264A4A200F38774 /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
-		A1F928882264A4AB00F38774 /* FourthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthViewController.swift; sourceTree = "<group>"; };
+		A1F928882264A4AB00F38774 /* AddStockController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStockController.swift; sourceTree = "<group>"; };
 		A1F9288A2264A85F00F38774 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A1F9288D2264A9C400F38774 /* AlphaVantageAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphaVantageAPI.swift; sourceTree = "<group>"; };
 		A1F9288F2264D0F900F38774 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
@@ -209,6 +209,8 @@
 			children = (
 				A1A5F0972265BBD100871E46 /* SetupApp */,
 				A16537F82265FFC00047144C /* ChartViewController.swift */,
+				A1F928882264A4AB00F38774 /* AddStockController.swift */,
+				A1F928912264EA2400F38774 /* PopupStockViewController.swift */,
 				A1C31E78226F337300D48474 /* MainViewController.swift */,
 			);
 			path = ViewControllers;
@@ -221,8 +223,6 @@
 				A12A5E042262375200C55FFD /* FirstViewController.swift */,
 				A1F928842264A19A00F38774 /* SecondViewController.swift */,
 				A1F928862264A4A200F38774 /* ThirdViewController.swift */,
-				A1F928882264A4AB00F38774 /* FourthViewController.swift */,
-				A1F928912264EA2400F38774 /* PopupStockViewController.swift */,
 			);
 			path = SetupApp;
 			sourceTree = "<group>";
@@ -389,12 +389,14 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Portfolio Light/Pods-Portfolio Light-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftReorder/SwiftReorder.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftReorder.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -414,7 +416,7 @@
 				A1A5F09B2265BF7F00871E46 /* Stock.swift in Sources */,
 				A120381422690878001FC56C /* String.swift in Sources */,
 				A12A5E032262375200C55FFD /* AppDelegate.swift in Sources */,
-				A1F928892264A4AB00F38774 /* FourthViewController.swift in Sources */,
+				A1F928892264A4AB00F38774 /* AddStockController.swift in Sources */,
 				A1C31E79226F337300D48474 /* MainViewController.swift in Sources */,
 				A1942C03226E73180078BA40 /* Enums.swift in Sources */,
 				A1C31E7B226F353E00D48474 /* MainViewCell.swift in Sources */,

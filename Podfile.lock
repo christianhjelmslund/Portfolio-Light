@@ -2,17 +2,21 @@ PODS:
   - Charts (3.2.2):
     - Charts/Core (= 3.2.2)
   - Charts/Core (3.2.2)
+  - SwiftReorder (6.0.2)
 
 DEPENDENCIES:
   - Charts
+  - SwiftReorder (~> 6.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Charts
+    - SwiftReorder
 
 SPEC CHECKSUMS:
   Charts: f69cf0518b6d1d62608ca504248f1bbe0b6ae77e
+  SwiftReorder: 60ef1faf6446cf68f9a647cb975530db8efd6620
 
-PODFILE CHECKSUM: 51842654be88cc0ddc32d52ae2b4ce24c28931af
+PODFILE CHECKSUM: c59342571de8e33ed4b264d7736f60b8ca4d3d6e
 
 COCOAPODS: 1.5.3

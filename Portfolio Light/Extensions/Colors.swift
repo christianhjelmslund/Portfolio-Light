@@ -16,8 +16,11 @@ extension UIColor {
     static let myGray = UIColor(red: 135/255, green: 135/255, blue: 150/255, alpha: 1)
     static let myDarkGray = UIColor(red: 71/255, green: 71/255, blue: 79/255, alpha: 1)
     static let myDark = UIColor(red: 43/255, green: 43/255, blue: 51/255, alpha: 1)
-    static let myGreen = UIColor(red:103/255, green:211/255, blue:141/255, alpha: 1)
+    static let myGreen = UIColor(red:51/255, green:255/255, blue:51/255, alpha: 1)
     static let errorColor = UIColor(red: 204/255, green: 0, blue: 0, alpha: 1)
+    static let myDarkGreen = UIColor(red: 0, green: 100/255, blue: 0, alpha: 1)
+    static let myRed = UIColor(red: 255/255, green: 51/255, blue: 51/255, alpha: 1)
+    static let myDarkRed = UIColor(red: 100/255, green: 0/255, blue: 0/255, alpha: 1)
 }
 
 extension CGColor {
