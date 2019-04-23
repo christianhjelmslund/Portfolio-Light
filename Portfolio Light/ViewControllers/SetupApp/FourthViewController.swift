@@ -9,20 +9,21 @@
 import UIKit
 
 class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, animateCompletionDelegate {
-   
+    
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var animationView: UIView!
     @IBOutlet weak var animationViewLabel: UILabel!
-    
-    let api = AlphaVantageAPI()
-    var keywords: [(name: String, symbol: String)] = []
-    
     @IBOutlet weak var doneButton: UIButton!
     
+    private let api = AlphaVantageAPI()
+    private var keywords: [StockSearchResult] = []
+    
+
     @IBAction func doneAction(_ sender: Any) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
         let mainVC = sb.instantiateViewController(withIdentifier: "MainVC") as! MainViewController
+        mainVC.modalTransitionStyle = .crossDissolve
         present(mainVC, animated: true, completion: nil)
     }
     
@@ -30,10 +31,9 @@ class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDe
         super.viewDidLoad()
         
         searchBar.delegate = self
-        
         self.view.setGradientBackground()
         
-        doneButton.backgroundColor = .clear
+        doneButton.backgroundColor = .myDark
         doneButton.layer.cornerRadius = 15
         doneButton.layer.borderWidth = 2
         doneButton.layer.borderColor = .myPurple
@@ -60,43 +60,45 @@ class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDe
     }
     
     func animateCompletion(){
-        animationView.isHidden = false
-        animationViewLabel.alpha = 1
-        let shape = CAShapeLayer()
-        animationViewLabel.text = "adding..."
-        animationView.layer.addSublayer(shape)
-        shape.fillColor = UIColor.clear.cgColor
-        shape.strokeColor = .myGreen
-        shape.lineCap = CAShapeLayerLineCap.round
-        shape.strokeEnd = 0
-        shape.lineWidth = 10
-        
-        let path = CGMutablePath()
-        path.addEllipse(in: animationView.layer.bounds)
-        shape.path = path
-        
-        let animcolor = CABasicAnimation(keyPath: "strokeEnd")
-        animcolor.toValue = 1
-        animcolor.duration = 0.5
-        animcolor.isRemovedOnCompletion = false
-        shape.add(animcolor, forKey: "strokeEnd")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.animationViewLabel.text = "success!"
-            UIView.animate(withDuration: 2, animations: {
-                self.animationViewLabel.alpha = 0
-            })
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-             self.animationView.isHidden = true
+        DispatchQueue.main.async {
+            self.animationView.isHidden = false
+            self.animationViewLabel.alpha = 1
+            let shape = CAShapeLayer()
+            self.animationViewLabel.text = "adding..."
+            self.animationView.layer.addSublayer(shape)
+            shape.fillColor = UIColor.clear.cgColor
+            shape.strokeColor = .myGreen
+            shape.lineCap = CAShapeLayerLineCap.round
+            shape.strokeEnd = 0
+            shape.lineWidth = 10
+            
+            let path = CGMutablePath()
+            path.addEllipse(in: self.animationView.layer.bounds)
+            shape.path = path
+            
+            let animcolor = CABasicAnimation(keyPath: "strokeEnd")
+            animcolor.toValue = 1
+            animcolor.duration = 0.5
+            animcolor.isRemovedOnCompletion = false
+            shape.add(animcolor, forKey: "strokeEnd")
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.animationViewLabel.text = "success!"
+                UIView.animate(withDuration: 2, animations: {
+                    self.animationViewLabel.alpha = 0
+                })
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                 self.animationView.isHidden = true
+            }
         }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
        
         if !searchText.isEmpty {
-            api.getSearchValues(keyword: searchText) { result in
+            api.getSearchValues(keyword: searchText) { result, status in
                 
                 if result.isEmpty {
                     self.keywords.removeAll()
@@ -116,7 +118,7 @@ class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDe
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         if let text = searchBar.text {
-            api.getSearchValues(keyword: text) { result in
+            api.getSearchValues(keyword: text) { result, status in
                 print(result)
                 if result.isEmpty {
                     self.keywords.removeAll()
@@ -147,19 +149,20 @@ class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultCell") as! SearchResultCell
         
-        if let name = keywords[safe: indexPath.row]?.name, let symbol = keywords[safe: indexPath.row]?.symbol {
+        if let name = keywords[safe: indexPath.row]?.name, let symbol = keywords[safe: indexPath.row]?.symbol, let region = keywords[safe: indexPath.row]?.region {
             cell.companyNameLabel.text = name
             cell.companySymbolLabel.text = symbol
+            cell.regionLabel.text = region
+            cell.regionLabel.textColor = .myLightPurple
             cell.companySymbolLabel.textColor = .myLightPurple
             cell.companyNameLabel.textColor = .myPurple
         } else {
-            
+            tableView.setEmptyView(title: "An error occured!", message: "Please try again later")
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let popupVC = storyboard?.instantiateViewController(withIdentifier: "PopupStock") as! PopupStockViewController
         popupVC.delegate = self
         popupVC.companyName = keywords[indexPath.row].name
@@ -168,7 +171,7 @@ class FourthViewController: UIViewController, UISearchBarDelegate, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
+        return 100
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -204,8 +207,8 @@ extension UITableView {
     }
     func restore() {
         self.backgroundView = nil
-        self.separatorStyle = .singleLine
-        self.separatorColor = .myPurple
+        self.separatorStyle = .none
+
     }
 }
 

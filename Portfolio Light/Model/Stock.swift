@@ -33,8 +33,6 @@ class Stock: NSObject, Codable {
     }
     
     func calculateLossOrProfit() -> Int{
-        
-        
         return 0
     }
 }

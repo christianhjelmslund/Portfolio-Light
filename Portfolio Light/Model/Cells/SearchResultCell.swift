@@ -12,12 +12,21 @@ class SearchResultCell: UITableViewCell {
 
     @IBOutlet weak var companyNameLabel: UILabel!
     @IBOutlet weak var companySymbolLabel: UILabel!
+    @IBOutlet weak var regionLabel: UILabel!
+    @IBOutlet weak var bgView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = UITableViewCell.SelectionStyle.none
+        bgView.backgroundColor = .myDark
+        bgView.layer.cornerRadius = 15
+        
+        bgView.layer.shadowColor = CGColor.myLightPurple
+        bgView.layer.shadowOpacity = 1
+        bgView.layer.shadowOffset = CGSize.zero
+        bgView.layer.shadowRadius = 5
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }

@@ -35,10 +35,14 @@
 		A12A5E4122623BB700C55FFD /* SF-Compact-Text-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = A12A5E2C22623BB700C55FFD /* SF-Compact-Text-Light.otf */; };
 		A12A5E4222623BB700C55FFD /* SF-Compact-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = A12A5E2D22623BB700C55FFD /* SF-Compact-Display-Regular.otf */; };
 		A12A5E4522623FD000C55FFD /* RootPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12A5E4422623FD000C55FFD /* RootPageViewController.swift */; };
-		A16537F92265FFC00047144C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16537F82265FFC00047144C /* MainViewController.swift */; };
+		A16537F92265FFC00047144C /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16537F82265FFC00047144C /* ChartViewController.swift */; };
+		A1942C03226E73180078BA40 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1942C02226E73180078BA40 /* Enums.swift */; };
 		A1A5F0962265BB0100871E46 /* SetupApp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1A5F0952265BB0100871E46 /* SetupApp.storyboard */; };
 		A1A5F09B2265BF7F00871E46 /* Stock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A5F09A2265BF7F00871E46 /* Stock.swift */; };
 		A1B888952265F72D007A1C23 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1B888942265F72D007A1C23 /* Main.storyboard */; };
+		A1C31E77226F08CE00D48474 /* StockSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C31E76226F08CE00D48474 /* StockSearchResult.swift */; };
+		A1C31E79226F337300D48474 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C31E78226F337300D48474 /* MainViewController.swift */; };
+		A1C31E7B226F353E00D48474 /* MainViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C31E7A226F353E00D48474 /* MainViewCell.swift */; };
 		A1F928852264A19A00F38774 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F928842264A19A00F38774 /* SecondViewController.swift */; };
 		A1F928872264A4A200F38774 /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F928862264A4A200F38774 /* ThirdViewController.swift */; };
 		A1F928892264A4AB00F38774 /* FourthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F928882264A4AB00F38774 /* FourthViewController.swift */; };
@@ -83,10 +87,14 @@
 		A12A5E2C22623BB700C55FFD /* SF-Compact-Text-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Text-Light.otf"; sourceTree = "<group>"; };
 		A12A5E2D22623BB700C55FFD /* SF-Compact-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Regular.otf"; sourceTree = "<group>"; };
 		A12A5E4422623FD000C55FFD /* RootPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootPageViewController.swift; sourceTree = "<group>"; };
-		A16537F82265FFC00047144C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A16537F82265FFC00047144C /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
+		A1942C02226E73180078BA40 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		A1A5F0952265BB0100871E46 /* SetupApp.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SetupApp.storyboard; sourceTree = "<group>"; };
 		A1A5F09A2265BF7F00871E46 /* Stock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stock.swift; sourceTree = "<group>"; };
 		A1B888942265F72D007A1C23 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		A1C31E76226F08CE00D48474 /* StockSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSearchResult.swift; sourceTree = "<group>"; };
+		A1C31E78226F337300D48474 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A1C31E7A226F353E00D48474 /* MainViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewCell.swift; sourceTree = "<group>"; };
 		A1F928842264A19A00F38774 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A1F928862264A4A200F38774 /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		A1F928882264A4AB00F38774 /* FourthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthViewController.swift; sourceTree = "<group>"; };
@@ -200,7 +208,8 @@
 			isa = PBXGroup;
 			children = (
 				A1A5F0972265BBD100871E46 /* SetupApp */,
-				A16537F82265FFC00047144C /* MainViewController.swift */,
+				A16537F82265FFC00047144C /* ChartViewController.swift */,
+				A1C31E78226F337300D48474 /* MainViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -233,7 +242,9 @@
 				A1F9288A2264A85F00F38774 /* Constants.swift */,
 				A12A5E022262375200C55FFD /* AppDelegate.swift */,
 				A1A5F09A2265BF7F00871E46 /* Stock.swift */,
+				A1C31E76226F08CE00D48474 /* StockSearchResult.swift */,
 				A1F928932264F60B00F38774 /* Cells */,
+				A1942C02226E73180078BA40 /* Enums.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -250,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				A1F9288F2264D0F900F38774 /* SearchResultCell.swift */,
+				A1C31E7A226F353E00D48474 /* MainViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -397,15 +409,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				A12A5E052262375200C55FFD /* FirstViewController.swift in Sources */,
-				A16537F92265FFC00047144C /* MainViewController.swift in Sources */,
+				A16537F92265FFC00047144C /* ChartViewController.swift in Sources */,
 				A12A5E162262377900C55FFD /* Colors.swift in Sources */,
 				A1A5F09B2265BF7F00871E46 /* Stock.swift in Sources */,
 				A120381422690878001FC56C /* String.swift in Sources */,
 				A12A5E032262375200C55FFD /* AppDelegate.swift in Sources */,
 				A1F928892264A4AB00F38774 /* FourthViewController.swift in Sources */,
+				A1C31E79226F337300D48474 /* MainViewController.swift in Sources */,
+				A1942C03226E73180078BA40 /* Enums.swift in Sources */,
+				A1C31E7B226F353E00D48474 /* MainViewCell.swift in Sources */,
 				A1F928902264D0F900F38774 /* SearchResultCell.swift in Sources */,
 				A1F9288E2264A9C400F38774 /* AlphaVantageAPI.swift in Sources */,
 				A1F928852264A19A00F38774 /* SecondViewController.swift in Sources */,
+				A1C31E77226F08CE00D48474 /* StockSearchResult.swift in Sources */,
 				A1F928872264A4A200F38774 /* ThirdViewController.swift in Sources */,
 				A1F928922264EA2400F38774 /* PopupStockViewController.swift in Sources */,
 				A12A5E4522623FD000C55FFD /* RootPageViewController.swift in Sources */,
@@ -558,7 +574,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "christianhjelmslund.Portfolio-Light";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -577,7 +593,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "christianhjelmslund.Portfolio-Light";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

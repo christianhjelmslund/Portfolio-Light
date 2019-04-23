@@ -16,26 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "SetupApp", bundle: nil)
-        let initialViewControlleripad : UIViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "Root") as! RootPageViewController
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = initialViewControlleripad
-        self.window?.makeKeyAndVisible()
-        let defaults = UserDefaults.standard
-        
-        guard let stocksData = defaults.object(forKey: "stocks") as? Data else { return true }
-        
-        guard let stocks = try? PropertyListDecoder().decode([Stock].self, from: stocksData) else { return true }
-      
-        for stock in stocks {
-            print(stock.company)
-        }
-       
-//        if var stocks = UserDefaults.standard.array(forKey: "stocks") as? [Stock] {
-//            print(stocks)
-//        } else {
-//            print("could not find stocks")
-//        }
+//        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "SetupApp", bundle: nil)
+//        let initialViewControlleripad : UIViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "Root") as! RootPageViewController
+//        self.window = UIWindow(frame: UIScreen.main.bounds)
+//        self.window?.rootViewController = initialViewControlleripad
+//        self.window?.makeKeyAndVisible()
         
         return true
     }

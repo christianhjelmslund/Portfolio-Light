@@ -9,7 +9,10 @@
 import UIKit
 
 class PopupStockViewController: UIViewController {
-
+    
+    @IBOutlet var tapGesture: UITapGestureRecognizer!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var animationView: UIView!
     @IBOutlet weak var illegalInputLabel: UILabel!
     @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -18,6 +21,8 @@ class PopupStockViewController: UIViewController {
     @IBOutlet weak var amountBoughtTextField: UITextField!
     @IBOutlet weak var amountBoughtLabel: UILabel!
     @IBOutlet weak var addStockButton: UIButton!
+    @IBOutlet weak var cancelStockButton: UIButton!
+    
     private var datePicker: UIDatePicker?
     let api = AlphaVantageAPI()
     var companyName = ""
@@ -25,6 +30,10 @@ class PopupStockViewController: UIViewController {
     let defaults = UserDefaults.standard
     var delegate: animateCompletionDelegate?
         
+    @IBAction func cancelAction(_ sender: Any) {
+       dismiss(animated: true, completion: nil)
+    }
+    
     @IBAction func addStockAction(_ sender: Any) {
         illegalInputLabel.alpha = 0
         let tuple = validateDate(date: dateTextField.text!)
@@ -34,7 +43,6 @@ class PopupStockViewController: UIViewController {
             UIView.animate(withDuration: 0.25, animations: {
                 self.illegalInputLabel.alpha = 1
             })
-            illegalInputLabel.text = "The date did not match the expected format"
         } else if validateAmount(amount: amountBoughtTextField.text!) == 0 {
             UIView.animate(withDuration: 0.25, animations: {
                 self.illegalInputLabel.alpha = 1
@@ -44,43 +52,60 @@ class PopupStockViewController: UIViewController {
            
             guard let amount = Int(amountBoughtTextField.text!) else { return }
             
-            api.getStockPriceDate(stocksymbol: companySymbol, date: date){ price in
-                let stock = Stock(company: self.companyName, symbol: self.companySymbol, dateBought: date, buyingPrice: price, amount: amount)
-                guard let stocksData = self.defaults.object(forKey: "stocks") as? Data else { return }
+            activityIndicator.isHidden = false
+            activityIndicator.startAnimating()
+            api.getStockPriceDate(stocksymbol: companySymbol, date: date) { price, statusCode in
                 
-                if var stocks = try? PropertyListDecoder().decode([Stock].self, from: stocksData) {
-                    stocks.append(stock)
-                    self.defaults.set(try? PropertyListEncoder().encode(stocks), forKey: "stocks")
-                } else {
-                    var stocks: [Stock] = []
-                    stocks.append(stock)
-                    self.defaults.set(try? PropertyListEncoder().encode(stocks), forKey: "stocks")
+                switch statusCode {
+                    
+                case .SUCCESS:
+                    let stock = Stock(company: self.companyName, symbol: self.companySymbol, dateBought: date, buyingPrice: price, amount: amount)
+                    print(self.companyName, self.companySymbol, date, price)
+                    if let stocksData = self.defaults.object(forKey: "stocks") as? Data {
+                        if var stocks = try? PropertyListDecoder().decode([Stock].self, from: stocksData) {
+                            stocks.append(stock)
+                            self.defaults.removeObject(forKey: "stocks")
+                            self.defaults.set(try? PropertyListEncoder().encode(stocks), forKey: "stocks")
+                        }
+                    } else {
+                        var stocks: [Stock] = []
+                        stocks.append(stock)
+                        self.defaults.set(try? PropertyListEncoder().encode(stocks), forKey: "stocks")
+                    }
+                    self.delegate?.animateCompletion()
+                    self.dismiss(animated: true, completion: nil)
+                    
+                 case .FAILURE:
+                    DispatchQueue.main.async {
+                        UIView.animate(withDuration: 0.25, animations: {
+                            self.illegalInputLabel.alpha = 1
+                        })
+                        self.activityIndicator.stopAnimating()
+                        self.activityIndicator.isHidden = true
+                        self.illegalInputLabel.text = "Are you sure the stock was traded that day?"
+                    }
                 }
-                self.delegate?.animateCompletion()
-                self.dismiss(animated: true, completion: nil)
             }
         }
     }
 
     func validateDate(date: String) -> (Bool, String) {
       
-
         let dateFormatterOne = DateFormatter()
         dateFormatterOne.dateFormat = "dd.MM.yy"
         let chosenDateTime = dateFormatterOne.date(from: date)
         let currentDateTime = Date()
         
-        if chosenDateTime! < currentDateTime {
-            print("before")
+        if let chosenDateTime = chosenDateTime {
+            if chosenDateTime >= currentDateTime {
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.illegalInputLabel.alpha = 1
+                })
+                illegalInputLabel.text = "You cannot pick a future date"
+                return (false, "")
+            }
         }
-        print(chosenDateTime)
-        print(currentDateTime)
-        
-        
-        
-        
         if (chosenDateTime != nil)  {
-            
             let day = date[NSRange(location: 0, length: 2)]
             let month = date[NSRange(location: 3, length: 2)]
             let year = date[NSRange(location: 6, length: 4)]
@@ -89,6 +114,7 @@ class PopupStockViewController: UIViewController {
             print(formattedDate)
             return (true, formattedDate)
         } else {
+            illegalInputLabel.text = "The date did not match the expected format"
             return (false, "")
         }
     }
@@ -103,19 +129,6 @@ class PopupStockViewController: UIViewController {
         return 0
     }
 
-    func addTapGesture() {
-        let singleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.singleTap(sender:)))
-        singleTapGestureRecognizer.numberOfTapsRequired = 1
-        singleTapGestureRecognizer.isEnabled = true
-        singleTapGestureRecognizer.cancelsTouchesInView = false
-        self.view.addGestureRecognizer(singleTapGestureRecognizer)
-    }
- 
-   
-    @objc func singleTap(sender: UITapGestureRecognizer) {
-        dismiss(animated: true, completion: nil)
-    }
-    
     @objc func dismissKeyboard(gestureRecognizer: UITapGestureRecognizer) {
         view.endEditing(true)
     }
@@ -123,10 +136,14 @@ class PopupStockViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+       
         datePicker = UIDatePicker()
         datePicker?.datePickerMode = .date
         dateTextField.inputView = datePicker
+        
         datePicker?.addTarget(self, action: #selector(self.dateChanged(datePicker:)), for: .valueChanged)
+        activityIndicator.isHidden = true
+        activityIndicator.style = .whiteLarge
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(gestureRecognizer:)))
         self.view.addGestureRecognizer(tapGesture)
@@ -157,8 +174,17 @@ class PopupStockViewController: UIViewController {
         addStockButton.layer.borderWidth = 2
         addStockButton.layer.borderColor = .myPurple
         
+        cancelStockButton.setTitleColor(.myPurple, for: .normal)
+        cancelStockButton.backgroundColor = .clear
+        cancelStockButton.layer.cornerRadius = 15
+        cancelStockButton.layer.borderWidth = 2
+        cancelStockButton.layer.borderColor = .myPurple
+        
         backgroundView.layer.cornerRadius = 15
-        backgroundView.layer.masksToBounds = true
+        backgroundView.layer.shadowColor = .myLightPurple
+        backgroundView.layer.shadowOpacity = 1
+        backgroundView.layer.shadowOffset = CGSize.zero
+        backgroundView.layer.shadowRadius = 15
         backgroundView.backgroundColor = .myDark
     }
     

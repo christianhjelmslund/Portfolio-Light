@@ -2,128 +2,74 @@
 //  MainViewController.swift
 //  Portfolio Light
 //
-//  Created by Christian Hjelmslund on 16/04/2019.
+//  Created by Christian Hjelmslund on 23/04/2019.
 //  Copyright © 2019 Christian Hjelmslund. All rights reserved.
 //
 
 import UIKit
-import Charts
 
-class MainViewController: UIViewController {
-
-    @IBOutlet weak var dataView: UIView!
-    @IBOutlet weak var chartView: BubbleChartView!
+class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+   
+    @IBOutlet weak var topViewBar: UIView!
+    @IBOutlet weak var spaceBar: UIView!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var bottomInfoBar: UIView!
+    @IBOutlet weak var navigationBar: UINavigationBar!
+    private let defaults = UserDefaults.standard
+    private let api = AlphaVantageAPI()
+    private var stocks: [Stock] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .myDark
+        tableView.delegate = self
+        tableView.dataSource = self
+        getStocks()
         
-        dataView.backgroundColor = .myLightPurple
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 600
         
-        chartView.chartDescription?.enabled = false
+        self.view.setGradientBackground()
         
-        
-        chartView.setScaleEnabled(true)
-        chartView.maxVisibleCount = 40
-        chartView.pinchZoomEnabled = true
-        
-        chartView.legend.horizontalAlignment = .right
-        chartView.legend.verticalAlignment = .top
-        chartView.legend.orientation = .vertical
-        chartView.legend.drawInside = false
-        chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 18)!
-        chartView.legend.textColor = .white
-        chartView.legend.xEntrySpace = 7
-        chartView.legend.yEntrySpace = 0
-        chartView.legend.yOffset = 10
-        chartView.legend.enabled = true
-        
-        chartView.leftAxis.labelFont = UIFont(name: "HelveticaNeue-Light", size: 12)!
-        chartView.leftAxis.labelTextColor = .white
-        chartView.rightAxis.enabled = false
-        chartView.xAxis.enabled = false
-        chartView.leftAxis.enabled = false
-        
-        chartView.xAxis.labelPosition = .bottom
-        chartView.xAxis.labelTextColor = .white
-        
-        chartView.rightAxis.labelTextColor = .white
-        chartView.xAxis.labelFont = UIFont(name: "HelveticaNeue-Light", size: 12)!
-        chartView.drawGridBackgroundEnabled = false
-        chartView.gridBackgroundColor = .clear
-        
-        
-        chartView.xAxis.drawGridLinesEnabled = false
-        chartView.leftAxis.drawGridLinesEnabled = false
-        setData(range: 5)
+        topViewBar.backgroundColor = .myPurple
+        navigationBar.barTintColor = .myPurple
+        tableView.separatorStyle = .none
+        navigationBar.isTranslucent = false
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.myDark]
+        navigationBar.titleTextAttributes = textAttributes
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return stocks.count
+    }
     
-    func setData (range: UInt32) {
-        
- 
-        let bcDataEntry2 = BubbleChartDataEntry(x: 1, y: 1, size: 30)
-        let bcDataEntry3 = BubbleChartDataEntry(x: 3, y: 2, size: 30)
-        let bcDataEntry4 = BubbleChartDataEntry(x: 4, y: 3, size: 30)
-        let bcDataEntry5 = BubbleChartDataEntry(x: 1, y: 3, size: 30)
-//        let bcDataEntry4 = BubbleChartDataEntry(x: 1, y: 1, size: 5)
-//        let bcDataEntry5 = BubbleChartDataEntry(x: 4, y: 2, size: 2)
-//
-//
-//        let yVals2 = (1..<5).map { (i) -> BubbleChartDataEntry in
-//            let val = Double(arc4random_uniform(range))
-//            let size = CGFloat(arc4random_uniform(range))
-//            let chart = BubbleChartDataEntry(x: Double(i), y: val, size: size, icon: UIImage(named: "icon"))
-//            return chart
-//        }
-        
-        var myvalues: [BubbleChartDataEntry] = []
-        myvalues.append(BubbleChartDataEntry(x: 0, y: 0, size: 0))
-//        myvalues.append(bcDataEntry2)
-        myvalues.append(bcDataEntry2)
-        myvalues.append(bcDataEntry3)
-        myvalues.append(bcDataEntry4)
-        myvalues.append(bcDataEntry5)
-        
-        for value in myvalues {
-            print(value)
+    func getStocks(){
+        guard let stocksData = defaults.object(forKey: "stocks") as? Data else { return }
+        guard let fetchedStocks = try? PropertyListDecoder().decode([Stock].self, from: stocksData) else { return }
+        stocks = fetchedStocks
+        for stock in stocks {
+            print(stock.company)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "mainViewCell") as! MainViewCell
         
-//        myvalues.append(bcDataEntry4)
-        
-//        let set1 = BubbleChartDataSet(values: yVals2, label: "DS 1")
-//        set1.drawIconsEnabled = false
-//        set1.setColor(ChartColorTemplates.colorful()[0], alpha: 0.5)
-//        set1.drawValuesEnabled = true
-//
-        let mySet = BubbleChartDataSet(values: myvalues, label: "Boeing")
-        mySet.setColor(.myGreen, alpha: 0.5)
-        mySet.drawValuesEnabled = true
+        if let name = stocks[safe: indexPath.row]?.company, let dateBought = stocks[safe: indexPath.row]?.dateBought, let amount = stocks[safe: indexPath.row]?.amount,
+            let buyingPrice = stocks[safe: indexPath.row]?.buyingPrice, let symbol = stocks[safe: indexPath.row]?.symbol {
+            cell.stocknameLabel.text = name
+            cell.dateBought.text = dateBought
+            cell.amountOfStocks.text = String(amount)+" stocks"
+            cell.boughtPrice.text = "price when bought: "+String(buyingPrice)+"$"
+            
+            api.getStockPriceNow(stocksymbol: symbol) { (result, statusCode) in
+                print(result)
+                DispatchQueue.main.async {
+                    cell.priceNow.text = "price now: "+String(result)+"$"
+                }
+            }
+        }
+        return cell
+    }
 
-        let data = BubbleChartData(dataSets: [mySet])
-        
-        chartView.leftAxis.axisMinimum = 0
-        chartView.xAxis.axisMinimum = 0
-        chartView.leftAxis.axisMaximum = 5
-        chartView.xAxis.axisMaximum = 5
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.maximumFractionDigits = 1
-        formatter.multiplier = 1
-        data.setValueFormatter(DefaultValueFormatter(formatter:formatter))
-        
-        data.setValueFont(.systemFont(ofSize: 12, weight: .bold))
-        
-        data.setDrawValues(true)
-        data.setValueFont(UIFont(name: "HelveticaNeue-Light", size: 7)!)
-        data.setHighlightCircleWidth(1.5)
-        data.setValueTextColor(.white)
-        
-        chartView.data = data
-        
-    }
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
 }

@@ -175,11 +175,41 @@ class AlphaVantageAPI {
         }
     }
     
-    func getStockPriceDate(stocksymbol: String, date: String, completion: @escaping (_ result: Double) -> Void){
+    func getLastRefreshed (completion: @escaping (_ result: String, _ statusCode: StatusCode) -> Void) {
+        let stockUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey=demo"
+        
+        guard let url = URL(string: stockUrl) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let dataResponse = data,
+                error == nil else {
+                    print(error?.localizedDescription ?? "Response Error")
+                    return }
+            do{
+                
+                let jsonResponse = try JSONSerialization.jsonObject(with:
+                    dataResponse, options: [])
+                guard let jsonArray = jsonResponse as? [String:Any] else {
+                    completion("", StatusCode.FAILURE)
+                    return
+                }
+                if let array = jsonArray["Meta Data"] as? [String: String] {
+                    if let refreshed = array["3. Last Refreshed"]{
+                        completion(refreshed, StatusCode.SUCCESS)
+                    }
+                }
+            } catch let parsingError {
+                 completion("", StatusCode.FAILURE)
+                print("Error", parsingError)
+            }
+        }.resume()
+    }
+    
+    func getStockPriceDate(stocksymbol: String, date: String, completion: @escaping (_ result: Double, _ statusCode: StatusCode) -> Void){
         let stockUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=\(stocksymbol)&outputsize=full&apikey=\(key)"
         guard let url = URL(string: stockUrl) else { return }
+        
+        
         AlphaVantageAPI.myTimeSeries_TIME_SERIES_DAILY_ADJUSTED = date
-        print(AlphaVantageAPI.myTimeSeries_TIME_SERIES_DAILY_ADJUSTED)
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else { return }
             
@@ -187,36 +217,63 @@ class AlphaVantageAPI {
                 let matches = try JSONDecoder().decode(Stocks_TIME_SERIES_DAILY_ADJUSTED.self, from: data)
                 let series = matches.series
                 let timeSeries = series.timeSeries
-                print(timeSeries.close)
                 guard let price = Double(timeSeries.close) else { return }
-                print(price)
-                completion(price)
+                completion(price, StatusCode.SUCCESS)
             } catch let jsonErr {
                 print("Error serializing json:", jsonErr)
-                completion(-1.0)
+                completion(-1.0, StatusCode.FAILURE)
             }
             }.resume()
     
     }
     
-    func getSearchValues(keyword: String, completion: @escaping (_ questions:[(name: String, symbol: String)]) -> Void) {
+    func getStockPriceNow(stocksymbol: String, completion: @escaping (_ result: Double, _ statusCode: StatusCode) -> Void){
+        let stockUrl = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=\(stocksymbol)&interval=5min&apikey=\(key)"
+        guard let url = URL(string: stockUrl) else { return }
+        print(stockUrl)
+        getLastRefreshed(){ result, statusCode in
+            switch statusCode {
+            case .SUCCESS:
+                AlphaVantageAPI.myTimeSeries_TIME_SERIES_INTRADAY = result
+                print(AlphaVantageAPI.myTimeSeries_TIME_SERIES_INTRADAY)
+                URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    guard let data = data else { return }
+                    do {
+                        let matches = try JSONDecoder().decode(Stocks_TIME_SERIES_INTRADAY.self, from: data)
+                        let series = matches.series
+                        let timeSeries = series.timeSeries
+                        guard let price = Double(timeSeries.close) else { return }
+                        completion(price, StatusCode.SUCCESS)
+                    } catch let jsonErr {
+                        print("Error serializing json:", jsonErr)
+                        completion(-1.0, StatusCode.FAILURE)
+                    }
+                }.resume()
+            case .FAILURE:
+                  completion(-1.0, StatusCode.FAILURE)
+            }
+        }
+    }
+    
+    func getSearchValues(keyword: String, completion: @escaping (_ result:[StockSearchResult], _ statusCode: StatusCode) -> Void) {
         
         let searchUrl = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=\(keyword)&apikey=\(key)"
         guard let url = URL(string: searchUrl) else { return }
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else { return }
-           
+            
             do {
                 let matches = try JSONDecoder().decode(Search.self, from: data)
-                var companies: [(name: String, symbol: String)] = []
+                
+                var companies: [StockSearchResult] = []
                 for match in matches.bestMatches {
-                    companies.append((name: match.name, symbol: match.symbol))
+                    companies.append(StockSearchResult(name: match.name, symbol: match.symbol, region: match.region))
                 }
-                completion(companies)
+                completion(companies, StatusCode.SUCCESS)
             } catch let jsonErr {
                 print("Error serializing json:", jsonErr)
-                completion([])
+                completion([], StatusCode.FAILURE)
             }
         }.resume()
     }

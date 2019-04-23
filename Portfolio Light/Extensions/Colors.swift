@@ -26,6 +26,8 @@ extension CGColor {
     static let myGray = UIColor(red: 135/255, green: 135/255, blue: 150/255, alpha: 1).cgColor
     static let myDarkGray = UIColor(red: 71/255, green: 71/255, blue: 79/255, alpha: 1).cgColor
     static let myDark = UIColor(red: 43/255, green: 43/255, blue: 51/255, alpha: 1).cgColor
+    static let myDarkWithAlpha = UIColor(red: 43/255, green: 43/255, blue: 51/255, alpha: 0.2).cgColor
+    static let myWhitekWithAlpha = UIColor(red: 192/255, green: 192/255, blue: 192/255, alpha: 0.2).cgColor
     static let myGreen = UIColor(red:103/255, green:211/255, blue:141/255, alpha: 1).cgColor
 }
 
@@ -36,6 +38,15 @@ extension UIView {
         gradientLayer.colors = [CGColor.myDark, CGColor.myDarkGray, CGColor.myDark, CGColor.myDarkGray, CGColor.myDark]
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        layer.insertSublayer(gradientLayer, at: 0)
+    }
+    
+    func setGradientBackgroundFade() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = [CGColor.myDark, CGColor.myDarkGray, CGColor.myDark, CGColor.myDarkWithAlpha, CGColor.myWhitekWithAlpha]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
         layer.insertSublayer(gradientLayer, at: 0)
     }
     

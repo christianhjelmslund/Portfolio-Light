@@ -11,11 +11,19 @@ import UIKit
 class ThirdViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     
+    @IBOutlet weak var bgView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.view.setGradientBackground()
+        bgView.backgroundColor = .myDark
+        bgView.layer.cornerRadius = 15
         
+        bgView.layer.shadowColor = .myPurple
+        bgView.layer.shadowOpacity = 1
+        bgView.layer.shadowOffset = CGSize.zero
+        bgView.layer.shadowRadius = 10
         descriptionLabel.textColor = .myPurple
         descriptionLabel.font = UIFont.preferredFont(forTextStyle: .title3)
         descriptionLabel.adjustsFontForContentSizeCategory = true
